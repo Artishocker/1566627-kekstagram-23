@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм»
 
 * Студент: [Darya](https://up.htmlacademy.ru/javascript/23/user/1566627).
-* Наставник: `Неизвестно`.
+* Наставник: [Андрей Рыжаков](https://up.htmlacademy.ru/javascript/23/user/201015).
 
 ---
 
