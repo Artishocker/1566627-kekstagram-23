@@ -65,7 +65,6 @@ const getRandomArrayElement = (elements) => elements[getRandomNumber(0, elements
 
 const createComment = (comId, objId) => ({
   id: SIMILAR_PHOTO_DESCRIPTION_COUNT + objId*SIMILAR_COMMENT_COUNT + comId + 1,
-  //avatar: 'img/avatar-' + getRandomNumber(1,  6) + '.svg',
   avatar: `img/avatar-${getRandomNumber(1,  6)}.svg`,
   message: getRandomArrayElement(MESSAGE),
   name: getRandomArrayElement(NAMES),
@@ -79,5 +78,7 @@ const createPhotoDescription = (objId) => ({
   comments: new Array(SIMILAR_COMMENT_COUNT).fill(null).map((item, comIndex)=>createComment(comIndex, objId)),
 });
 
-const similarPhotoDescriptions = new Array(SIMILAR_PHOTO_DESCRIPTION_COUNT).fill(null).map((item, index)=>createPhotoDescription(index));
-console.log(similarPhotoDescriptions);
+
+//const similarPhotoDescriptions =
+new Array(SIMILAR_PHOTO_DESCRIPTION_COUNT).fill(null).map((item, index)=>createPhotoDescription(index));
+//console.log(similarPhotoDescriptions);
