@@ -1,1 +1,1 @@
-import './utils/PhotoDescription.js';
+import './utils/ThumbnailsRendering.js';

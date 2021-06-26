@@ -50,9 +50,4 @@ const createPhotoDescription = (objId) => ({
   comments: new Array(SIMILAR_COMMENT_COUNT).fill(null).map((item, comIndex)=>createComment(comIndex, objId)),
 });
 
-
-//const similarPhotoDescriptions =
-new Array(SIMILAR_PHOTO_DESCRIPTION_COUNT).fill(null).map((item, index)=>createPhotoDescription(index));
-//console.log(similarPhotoDescriptions);
-
-export * from './PhotoDescription.js';
+export const similarPhotoDescriptions = new Array(SIMILAR_PHOTO_DESCRIPTION_COUNT).fill(null).map((item, index)=>createPhotoDescription(index));
