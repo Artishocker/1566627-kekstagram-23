@@ -1,4 +1,5 @@
 import {similarPhotoDescriptions as pictures} from './PhotoDescription.js';
+import {isEscEvent} from './util.js';
 
 const renderComments = (Comments) => {
   const commentsBlock = document.querySelector('.social__comments');
@@ -18,8 +19,8 @@ const renderComments = (Comments) => {
 };
 
 const thumbnailClick = (evt) => {
-  evt.preventDefault();
   if(evt.target.parentNode.classList.contains('picture')) {
+    evt.preventDefault();
     const picId = evt.target.parentNode.dataset.picId;
     const chosenPicture = pictures.find( (item) => item.id === +picId);
     const bigPictureWrap = document.querySelector('.big-picture');
@@ -43,7 +44,7 @@ const closeBigPicture = () => {
 };
 
 const keyDownHandler = (evt) => {
-  if(evt.keyCode === 27) {
+  if(isEscEvent(evt)) {
     closeBigPicture();
   }
 };
