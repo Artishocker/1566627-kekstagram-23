@@ -16,4 +16,5 @@ const renderThumbnail = (Pictures) => {
   picturesBlock.appendChild(fragment);
 };
 renderThumbnail(similarPhotoDescriptions);
+
 export * from './ThumbnailsRendering.js';
