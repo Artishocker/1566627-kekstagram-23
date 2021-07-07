@@ -47,7 +47,7 @@ const createPhotoDescription = (objId) => ({
   url:`photos/${objId+1}.jpg`,
   description:getRandomArrayElement(DESCRIPTION),
   likes: getRandomNumber(15,  200),
-  comments: new Array(SIMILAR_COMMENT_COUNT).fill(null).map((item, comIndex)=>createComment(comIndex, objId)),
+  comments: new Array(getRandomNumber(4,  12)).fill(null).map((item, comIndex)=>createComment(comIndex, objId)),
 });
 
 export const similarPhotoDescriptions = new Array(SIMILAR_PHOTO_DESCRIPTION_COUNT).fill(null).map((item, index)=>createPhotoDescription(index));
