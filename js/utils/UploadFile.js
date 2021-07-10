@@ -1,4 +1,6 @@
 import {isEscEvent} from './util.js';
+import {setNewScaleNum, pictureScaleChange} from './PictureScale.js';
+import {sliderWrap} from './PictureEffects.js';
 
 const COMMENT_MAX_LENGTH = 140;
 const commentInput = document.querySelector('.img-upload__form .text__description');
@@ -18,6 +20,12 @@ const keyDownFocusedInput = (evt) => {
 const uploadFileInputChange = () => {
   document.querySelector('.img-upload__overlay').classList.remove('hidden');
   document.querySelector('body').classList.add('modal-open');
+
+  setNewScaleNum(100);
+  pictureScaleChange();
+
+  sliderWrap.classList.add('hidden');
+
 };
 
 const uploadCancel = () => {
