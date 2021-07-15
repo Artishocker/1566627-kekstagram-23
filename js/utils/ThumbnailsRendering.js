@@ -1,6 +1,6 @@
-import {similarPhotoDescriptions} from './PhotoDescription.js';
+import {renderBigPicture} from './ShowBigPicture.js';
 
-const renderThumbnail = (Pictures) => {
+export const renderThumbnail = (Pictures) => {
   const picturesBlock = document.querySelector('.pictures');
   const thumbsTemplateFragment = document.querySelector('#picture').content;
   const thumbsTemplate = thumbsTemplateFragment.querySelector('a');
@@ -14,7 +14,9 @@ const renderThumbnail = (Pictures) => {
     fragment.appendChild(element);
   }
   picturesBlock.appendChild(fragment);
+  const picturesBlockClickHandler = (evt) => renderBigPicture(evt, Pictures);
+
+  picturesBlock.addEventListener('click', picturesBlockClickHandler);
 };
-renderThumbnail(similarPhotoDescriptions);
 
 export * from './ThumbnailsRendering.js';

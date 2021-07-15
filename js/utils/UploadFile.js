@@ -1,6 +1,6 @@
 import {isEscEvent} from './util.js';
 import {setNewScaleNum, pictureScaleChange} from './PictureScale.js';
-import {sliderWrap} from './PictureEffects.js';
+import {changeFilter} from './PictureEffects.js';
 
 const COMMENT_MAX_LENGTH = 140;
 const commentInput = document.querySelector('.img-upload__form .text__description');
@@ -23,9 +23,7 @@ const uploadFileInputChange = () => {
 
   setNewScaleNum(100);
   pictureScaleChange();
-
-  sliderWrap.classList.add('hidden');
-
+  changeFilter();
 };
 
 const uploadCancel = () => {
@@ -49,19 +47,6 @@ const fastValidateCommentInput = () => {
   }
   commentInput.reportValidity();
 };
-
-/*
-const isUniqueHastags = (hashtags) => {
-  let tempArr = [];
-  for (let i = 0; i < hashtags.length; i++) {
-    if( (tempArr.join('_') + '_').indexOf(hashtags[i].toLowerCase() + '_') !== -1) {
-      return false;
-    }
-    tempArr.push(hashtags[i].toLowerCase());
-  }
-  return true;
-}
-*/
 
 const isUniqueHastags = (hashtags) => {
   let tempStr = '';
@@ -111,8 +96,95 @@ const fastValidateHashtagsInput = () => {
   hashtagsInput.reportValidity();
 };
 
+const showFormSuccessMess = () => {
+  const formSuccessMessTemplateFragment = document.querySelector('#success').content;
+  const formSuccessMessTemplate = formSuccessMessTemplateFragment.querySelector('section.success');
+  const fragment = document.createDocumentFragment();
+  const element = formSuccessMessTemplate.cloneNode(true);
+  fragment.appendChild(element);
+  document.querySelector('body').appendChild(fragment);
+
+  const formSuccessKeyDownHandler = (evt) => {
+    if(isEscEvent(evt)) {
+      document.querySelector('section.success').remove();
+      document.removeEventListener('keydown', formSuccessKeyDownHandler);
+    }
+  };
+  const closeFormSuccessMess = () => {
+    document.querySelector('section.success').remove();
+    document.removeEventListener('keydown', formSuccessKeyDownHandler);
+  };
+  const formSuccessOverlayClick = (evt) => {
+    if(evt.target.classList.contains('success')) {
+      closeFormSuccessMess();
+    }
+  };
+
+  document.addEventListener('keydown', formSuccessKeyDownHandler);
+  document.querySelector('.success__button').addEventListener('click', closeFormSuccessMess);
+  document.querySelector('section.success').addEventListener('click', formSuccessOverlayClick);
+};
+
+const showFormErrorMess = () => {
+  const formErrorMessTemplateFragment = document.querySelector('#error').content;
+  const formErrorMessTemplate = formErrorMessTemplateFragment.querySelector('section.error');
+  const fragment = document.createDocumentFragment();
+  const element = formErrorMessTemplate.cloneNode(true);
+  fragment.appendChild(element);
+  document.querySelector('body').appendChild(fragment);
+
+  const formErrorKeyDownHandler = (evt) => {
+    if(isEscEvent(evt)) {
+      document.querySelector('section.error').remove();
+      document.removeEventListener('keydown', formErrorKeyDownHandler);
+    }
+  };
+  const closeFormErrorMess = () => {
+    document.querySelector('section.error').remove();
+    document.removeEventListener('keydown', formErrorKeyDownHandler);
+  };
+  const formErrorOverlayClick = (evt) => {
+    if(evt.target.classList.contains('error')) {
+      closeFormErrorMess();
+    }
+  };
+
+  document.addEventListener('keydown', formErrorKeyDownHandler);
+  document.querySelector('.error__button').addEventListener('click', closeFormErrorMess);
+  document.querySelector('section.error').addEventListener('click', formErrorOverlayClick);
+};
+
+const uploadSubmit = (evt) => {
+  evt.preventDefault();
+  const formData = new FormData(evt.target);
+
+  fetch(
+    'https://23.javascript.pages.academy/kekstagram',
+    {
+      'method': 'POST',
+      'body': formData,
+    },
+  ).then(
+    (response) => {
+      if (response.ok) {
+        showFormSuccessMess();
+        return uploadCancel();
+      }
+      //const {statusText, status} = response;
+      //throw new Error(`Произошла ошибка загрузки данных с сервера:\r\n \r\n${status} - ${statusText}`);
+      throw new Error('Произошла ошибка');
+    },
+  ).catch(
+    () => {
+      showFormErrorMess();
+      return uploadCancel();
+    },
+  );
+};
+
 document.querySelector('#upload-file').addEventListener('change', uploadFileInputChange);
 document.querySelector('#upload-cancel').addEventListener('click', uploadCancel);
+document.querySelector('#upload-select-image').addEventListener('submit', uploadSubmit);
 document.addEventListener('keydown', keyDownHandler);
 
 commentInput.addEventListener('input', fastValidateCommentInput);
