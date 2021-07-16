@@ -12,6 +12,7 @@ const getCurrentScaleNum = () => +(document.querySelector('.scale__control--valu
 export const setNewScaleNum = (newScaleNum) => {
   document.querySelector('.scale__control--value').value = `${newScaleNum}%`;
 };
+
 export const pictureScaleChange = () => {
   const newScaleNum = getCurrentScaleNum();
   document.querySelectorAll('.img-upload__scale button').forEach( (item) => {
@@ -25,10 +26,12 @@ export const pictureScaleChange = () => {
   }
   imgUploadPreview.style.transform = `scale(${newScaleNum / 100})`;
 };
+
 const scaleControlBiggerClickHandler = () => {
   setNewScaleNum(getCurrentScaleNum() + scaleOptions.VALUE_STEP);
   pictureScaleChange();
 };
+
 const scaleControlSmallerClickHandler = () => {
   setNewScaleNum(getCurrentScaleNum() - scaleOptions.VALUE_STEP);
   pictureScaleChange();

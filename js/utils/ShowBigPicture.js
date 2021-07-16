@@ -1,4 +1,3 @@
-import {similarPhotoDescriptions as pictures} from './PhotoDescription.js';
 import {isEscEvent} from './util.js';
 
 const COMMENTS_BATCH_QUANTITY = 5;
@@ -34,11 +33,13 @@ const showNextCommentsBatch = () => {
   document.querySelector('.social__comment-count').childNodes[0].textContent = `${visibleCommentsCount} из `;
 };
 
-const thumbnailClick = (evt) => {
+export const renderBigPicture = (evt, pictures) => {
   if(evt.target.parentNode.classList.contains('picture')) {
     evt.preventDefault();
     const picId = evt.target.parentNode.dataset.picId;
     const chosenPicture = pictures.find( (item) => item.id === +picId);
+    //console.dir(chosenPicture);
+    //return;
     const bigPictureWrap = document.querySelector('.big-picture');
     bigPictureWrap.querySelector('.big-picture__img img').src = chosenPicture.url;
     bigPictureWrap.querySelector('.likes-count').textContent = chosenPicture.likes;
@@ -62,7 +63,6 @@ const keyDownHandler = (evt) => {
   }
 };
 
-document.querySelector('.pictures').addEventListener('click', thumbnailClick);
 document.querySelector('.big-picture__cancel').addEventListener('click', closeBigPicture);
 document.querySelector('.social__comments-loader').addEventListener('click', showNextCommentsBatch);
 document.addEventListener('keydown', keyDownHandler);
