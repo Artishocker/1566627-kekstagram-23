@@ -1,5 +1,12 @@
 import {renderBigPicture} from './ShowBigPicture.js';
 
+const removeRenderedThumbnail = () => {
+  const renderedThumbnails = document.querySelectorAll('.pictures .picture');
+  renderedThumbnails.forEach( (picture) => {
+    picture.remove();
+  });
+};
+
 export const renderThumbnail = (Pictures) => {
   const picturesBlock = document.querySelector('.pictures');
   const thumbsTemplateFragment = document.querySelector('#picture').content;
@@ -13,10 +20,16 @@ export const renderThumbnail = (Pictures) => {
     element.children[1].children[1].textContent = Pictures[pic].likes;
     fragment.appendChild(element);
   }
-  picturesBlock.appendChild(fragment);
-  const picturesBlockClickHandler = (evt) => renderBigPicture(evt, Pictures);
 
-  picturesBlock.addEventListener('click', picturesBlockClickHandler);
+  removeRenderedThumbnail();
+
+  picturesBlock.appendChild(fragment);
+};
+
+export const firstInitializeThumbnails = (Pictures) => {
+  const picturesBlockClickHandler = (evt) => renderBigPicture(evt, Pictures);
+  document.querySelector('.pictures').addEventListener('click', picturesBlockClickHandler);
+  renderThumbnail(Pictures);
 };
 
 export * from './ThumbnailsRendering.js';

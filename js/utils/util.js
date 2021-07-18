@@ -5,26 +5,34 @@ const getRandomNumber = function (minValue, MaxValue) {
   let min = minValue < MaxValue ? Math.ceil(minValue) : Math.ceil(MaxValue);
   const max = MaxValue > minValue ? Math.ceil(MaxValue) : Math.ceil(minValue);
 
-  if (min<0 && max<0) {
+  if (min < 0 && max < 0) {
     return false;
   }
-  if (min<0) {
-    min=0;
+  if (min < 0) {
+    min = 0;
   }
   return Math.floor(Math.random() * (max - min + 1)) + min; //Максимум и минимум включаются
 };
 
-//getRandomNumber();
+const getRandomSet = (minValue, maxValue, amount) => {
+  const newSet = new Set();
+  while (newSet.size < amount) {
+    newSet.add(getRandomNumber(minValue, maxValue));
+  }
+  return newSet;
+};
 
-//Функция для проверки максимальной длины строки
-// const checkCommentLength = function (currentLine, maxLength) {
-//   return currentLine.length-1<= maxLength;
-// };
-
-// checkCommentLength(1,2);
+const getRandomSetFromArr = (inputArr, outputArrLength) => {
+  const outputArr = [];
+  const randomSet = getRandomSet(0, inputArr.length - 1, outputArrLength);
+  randomSet.forEach( (item) => {
+    outputArr.push(inputArr[item]);
+  });
+  return outputArr;
+};
 
 const getRandomArrayElement = (elements) => elements[getRandomNumber(0, elements.length - 1)];
 
 const isEscEvent = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
 
-export {getRandomNumber, getRandomArrayElement, isEscEvent};
+export {getRandomNumber, getRandomArrayElement, isEscEvent, getRandomSet, getRandomSetFromArr};
