@@ -1,5 +1,6 @@
-import {renderThumbnail} from './ThumbnailsRendering.js';
+import {firstInitializeThumbnails} from './ThumbnailsRendering.js';
 import {isEscEvent} from './util.js';
+import {activateFilters} from './Filters.js';
 
 const showFormErrorMess = (error) => {
   const formErrorMessTemplateFragment = document.querySelector('#error').content;
@@ -30,13 +31,10 @@ const showFormErrorMess = (error) => {
     }
   };
 
-
   document.addEventListener('keydown', formErrorKeyDownHandler);
   document.querySelector('.error__button').addEventListener('click', closeFormErrorMess);
   document.querySelector('section.error').addEventListener('click', formErrorOverlayClick);
-
 };
-
 
 fetch('https://23.javascript.pages.academy/kekstagram/data')
   .then(
@@ -48,7 +46,8 @@ fetch('https://23.javascript.pages.academy/kekstagram/data')
       throw new Error(`Произошла ошибка загрузки данных с сервера:\r\n \r\n${status} - ${statusText}`);
     })
   .then((photos) => {
-    renderThumbnail(photos);
+    firstInitializeThumbnails(photos);
+    activateFilters(photos);
   })
   .catch((error) => {
     showFormErrorMess(error);
