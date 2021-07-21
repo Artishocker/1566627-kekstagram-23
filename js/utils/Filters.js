@@ -1,6 +1,6 @@
 import {renderThumbnails} from './thumbnails-rendering.js';
-import {getRandomSetFromArr} from './util.js';
 import {debounce} from './debounce.js';
+import {getRandomSetFromArr} from './util.js';
 
 const RERENDER_DELAY = 500;
 const RANDOM_PHOTOS_QUANTITY = 10;
