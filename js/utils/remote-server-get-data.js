@@ -1,6 +1,6 @@
-import {firstInitializeThumbnails} from './ThumbnailsRendering.js';
+import {firstInitializeThumbnails} from './thumbnails-rendering.js';
 import {isEscEvent} from './util.js';
-import {activateFilters} from './Filters.js';
+import {activateFilters} from './filters.js';
 
 const showFormErrorMess = (error) => {
   const formErrorMessTemplateFragment = document.querySelector('#error').content;

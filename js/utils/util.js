@@ -35,4 +35,4 @@ const getRandomArrayElement = (elements) => elements[getRandomNumber(0, elements
 
 const isEscEvent = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
 
-export {getRandomNumber, getRandomArrayElement, isEscEvent, getRandomSet, getRandomSetFromArr};
+export {getRandomNumber, isEscEvent, getRandomSetFromArr};

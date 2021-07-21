@@ -1,2 +1,2 @@
-import './utils/UploadFile.js';
-import './utils/RemoteServerGetData.js';
+import './utils/upload-file.js';
+import './utils/remote-server-get-data.js';
