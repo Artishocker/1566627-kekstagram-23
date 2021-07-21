@@ -65,4 +65,4 @@ document.querySelector('.big-picture__cancel').addEventListener('click', closeBi
 document.querySelector('.social__comments-loader').addEventListener('click', showNextCommentsBatch);
 document.addEventListener('keydown', keyDownHandler);
 
-export * from './ShowBigPicture.js';
+export * from './show-big-picture.js';

@@ -1,6 +1,6 @@
 import {isEscEvent} from './util.js';
-import {setNewScaleNum, pictureScaleChange} from './PictureScale.js';
-import {changeFilter} from './PictureEffects.js';
+import {setNewScaleNumber, pictureScaleChange} from './picture-scale.js';
+import {changeFilter} from './picture-effects.js';
 
 const COMMENT_MAX_LENGTH = 140;
 const commentInput = document.querySelector('.img-upload__form .text__description');
@@ -21,7 +21,7 @@ const uploadFileInputChange = () => {
   document.querySelector('.img-upload__overlay').classList.remove('hidden');
   document.querySelector('body').classList.add('modal-open');
 
-  setNewScaleNum(100);
+  setNewScaleNumber(100);
   pictureScaleChange();
   changeFilter();
 };
@@ -170,8 +170,6 @@ const uploadSubmit = (evt) => {
         showFormSuccessMess();
         return uploadCancel();
       }
-      //const {statusText, status} = response;
-      //throw new Error(`Произошла ошибка загрузки данных с сервера:\r\n \r\n${status} - ${statusText}`);
       throw new Error('Произошла ошибка');
     },
   ).catch(

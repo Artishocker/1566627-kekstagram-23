@@ -1,13 +1,14 @@
-import {renderThumbnail} from './ThumbnailsRendering.js';
+import {renderThumbnails} from './thumbnails-rendering.js';
 import {getRandomSetFromArr} from './util.js';
 import {debounce} from './debounce.js';
 
 const RERENDER_DELAY = 500;
+const RANDOM_PHOTOS_QUANTITY = 10;
 
 const getMostCommentedPhotos = (photos) => {
-  const sortPhotos = photos.slice();
-  sortPhotos.sort( (first, second) => (second.comments.length - first.comments.length)  );
-  return sortPhotos;
+  const sortedPhotos = photos.slice();
+  sortedPhotos.sort( (first, second) => (second.comments.length - first.comments.length)  );
+  return sortedPhotos;
 };
 
 export const activateFilters = (pictures) => {
@@ -20,14 +21,14 @@ export const activateFilters = (pictures) => {
       clickedElement.classList.add('img-filters__button--active');
       switch(clickedElement.id) {
         case 'filter-random':
-          debounce(renderThumbnail(getRandomSetFromArr(photos, 10)));
+          renderThumbnails(getRandomSetFromArr(photos, RANDOM_PHOTOS_QUANTITY));
           break;
         case 'filter-discussed':
-          debounce(renderThumbnail(getMostCommentedPhotos(photos)), RERENDER_DELAY);
+          renderThumbnails(getMostCommentedPhotos(photos));
           break;
         case 'filter-default':
         default:
-          debounce(renderThumbnail(photos), RERENDER_DELAY);
+          renderThumbnails(photos);
           break;
       }
     }
@@ -37,5 +38,5 @@ export const activateFilters = (pictures) => {
     filtersChange(evt, pictures);
   };
 
-  document.querySelector('.img-filters__form').addEventListener('click', filtersClickHandler);
+  document.querySelector('.img-filters__form').addEventListener('click', debounce(filtersClickHandler, RERENDER_DELAY));
 };

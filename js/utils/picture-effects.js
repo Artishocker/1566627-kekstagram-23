@@ -1,11 +1,12 @@
-export const sliderElement = document.querySelector('.effect-level__slider');
-export const sliderWrap = document.querySelector('.img-upload__effect-level');
-export const imgUploadPreview = document.querySelector('.img-upload__preview img');
+const slider = document.querySelector('.effect-level__slider');
+const imgUploadPreview = document.querySelector('.img-upload__preview img');
+
+const sliderWrap = document.querySelector('.img-upload__effect-level');
 
 let effectName = '';
 let extEffectVal = '';
 
-noUiSlider.create(sliderElement, {
+noUiSlider.create(slider, {
   range: {
     min: 0,
     max: 100,
@@ -25,11 +26,12 @@ noUiSlider.create(sliderElement, {
     },
   },
 });
+
 const sliderUpdateHandler = (values, handle) => {
   document.querySelector('.effect-level__value').value = values[handle];
   imgUploadPreview.style.filter = `${effectName}(${values[handle]}${extEffectVal})`;
 };
-sliderElement.noUiSlider.on('update', sliderUpdateHandler);
+slider.noUiSlider.on('update', sliderUpdateHandler);
 
 export const changeFilter = () => {
   const newEffectClass = document.querySelector('.effects__radio:checked').parentNode.querySelector('.effects__preview').classList[1];
@@ -77,7 +79,7 @@ export const changeFilter = () => {
       effectName = 'blur';
       break;
   }
-  sliderElement.noUiSlider.updateOptions({
+  slider.noUiSlider.updateOptions({
     range: {
       min: sliderMin,
       max: sliderMax,
@@ -91,4 +93,4 @@ document.querySelectorAll('.effects__radio').forEach( (item) => {
   item.addEventListener('change', changeFilter);
 });
 
-export * from './PictureEffects.js';
+export * from './picture-effects.js';
