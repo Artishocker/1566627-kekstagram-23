@@ -31,8 +31,6 @@ const getRandomSetFromArr = (inputArr, outputArrLength) => {
   return outputArr;
 };
 
-const getRandomArrayElement = (elements) => elements[getRandomNumber(0, elements.length - 1)];
-
 const isEscEvent = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
 
 export {getRandomNumber, isEscEvent, getRandomSetFromArr};
