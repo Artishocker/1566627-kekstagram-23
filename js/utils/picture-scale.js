@@ -4,8 +4,9 @@ const ScaleOptions = {
   'VALUE_STEP': 25,
   'DEFAULT_VALUE': 100,
 };
-const scaleBiggerButton = document.querySelector('.scale__control--bigger');
-const scaleSmallerButton = document.querySelector('.scale__control--smaller');
+
+export const scaleBiggerButton = document.querySelector('.scale__control--bigger');
+export const scaleSmallerButton = document.querySelector('.scale__control--smaller');
 const imgUploadPreview = document.querySelector('.img-upload__preview img');
 const getCurrentScaleNum = () => +(document.querySelector('.scale__control--value').value.slice(0, -1));
 
@@ -27,17 +28,14 @@ export const pictureScaleChange = () => {
   imgUploadPreview.style.transform = `scale(${newScaleNumber / 100})`;
 };
 
-const scaleControlBiggerClickHandler = () => {
+export const scaleControlBiggerClickHandler = () => {
   setNewScaleNumber(getCurrentScaleNum() + ScaleOptions.VALUE_STEP);
   pictureScaleChange();
 };
 
-const scaleControlSmallerClickHandler = () => {
+export const scaleControlSmallerClickHandler = () => {
   setNewScaleNumber(getCurrentScaleNum() - ScaleOptions.VALUE_STEP);
   pictureScaleChange();
 };
-
-scaleSmallerButton.addEventListener('click', scaleControlSmallerClickHandler);
-scaleBiggerButton.addEventListener('click', scaleControlBiggerClickHandler);
 
 export * from './picture-scale.js';

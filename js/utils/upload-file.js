@@ -1,10 +1,9 @@
 import {isEscEvent} from './util.js';
-import {setNewScaleNumber, pictureScaleChange} from './picture-scale.js';
+import {scaleSmallerButton, scaleBiggerButton, setNewScaleNumber, pictureScaleChange, scaleControlBiggerClickHandler, scaleControlSmallerClickHandler} from './picture-scale.js';
 import {changeFilter} from './picture-effects.js';
 
+const DEFAULT_SCALE = 100;
 const COMMENT_MAX_LENGTH = 140;
-const commentInput = document.querySelector('.img-upload__form .text__description');
-const hashtagsInput = document.querySelector('.img-upload__form .text__hashtags');
 const ErrorMessages = {
   HASHTAGS_QUANTITY: 'Нельзя указать больше пяти хэштегов',
   HASHTAGS_REPEAT: 'Хэштеги не должны повторяться',
@@ -13,29 +12,28 @@ const ErrorMessages = {
   COMMENT_LENGTH: 'Длина комментария не может превышать 140 символов',
 };
 
+const commentInput = document.querySelector('.img-upload__form .text__description');
+const hashtagsInput = document.querySelector('.img-upload__form .text__hashtags');
+const cancelUploadButton = document.querySelector('#upload-cancel');
+const imgUploadOverlay = document.querySelector('.img-upload__overlay');
+const body = document.querySelector('body');
+const uploadSelectImage = document.querySelector('#upload-select-image');
+const effectsRadioCollection = document.querySelectorAll('.effects__radio');
+
 const keyDownFocusedInput = (evt) => {
   evt.stopPropagation();
 };
 
-const uploadFileInputChange = () => {
-  document.querySelector('.img-upload__overlay').classList.remove('hidden');
-  document.querySelector('body').classList.add('modal-open');
-
-  setNewScaleNumber(100);
-  pictureScaleChange();
-  changeFilter();
-};
-
-const uploadCancel = () => {
-  document.querySelector('.img-upload__overlay').classList.add('hidden');
-  document.querySelector('body').classList.remove('modal-open');
-  document.querySelector('#upload-select-image').reset();
-};
-
-const keyDownHandler = (evt) => {
-  if(isEscEvent(evt)) {
-    uploadCancel();
+const isUniqueHastags = (hashtags) => {
+  let tempStr = '';
+  for (let index = 0; index < hashtags.length; index++) {
+    const curHashtagLowerCaseAndSeparator = `${hashtags[index].toLowerCase()}_`;
+    if(tempStr.indexOf(curHashtagLowerCaseAndSeparator) !== -1) {
+      return false;
+    }
+    tempStr += curHashtagLowerCaseAndSeparator;
   }
+  return true;
 };
 
 const fastValidateCommentInput = () => {
@@ -48,17 +46,6 @@ const fastValidateCommentInput = () => {
   commentInput.reportValidity();
 };
 
-const isUniqueHastags = (hashtags) => {
-  let tempStr = '';
-  for (let index = 0; index < hashtags.length; index++) {
-    const curHashtagLowerCaseAndseparator = `${hashtags[index].toLowerCase()}_`;
-    if(tempStr.indexOf(curHashtagLowerCaseAndseparator) !== -1) {
-      return false;
-    }
-    tempStr += curHashtagLowerCaseAndseparator;
-  }
-  return true;
-};
 
 const fastValidateHashtagsInput = () => {
   const hashtagsInputValue = hashtagsInput.value;
@@ -96,62 +83,95 @@ const fastValidateHashtagsInput = () => {
   hashtagsInput.reportValidity();
 };
 
-const showFormSuccessMess = () => {
-  const formSuccessMessTemplateFragment = document.querySelector('#success').content;
-  const formSuccessMessTemplate = formSuccessMessTemplateFragment.querySelector('section.success');
+const uploadCancel = () => {
+  imgUploadOverlay.classList.add('hidden');
+  body.classList.remove('modal-open');
+  uploadSelectImage.reset();
+
+  scaleSmallerButton.removeEventListener('click', scaleControlSmallerClickHandler);
+  scaleBiggerButton.removeEventListener('click', scaleControlBiggerClickHandler);
+
+  effectsRadioCollection.forEach( (item) => {
+    item.removeEventListener('change', changeFilter);
+  });
+
+  cancelUploadButton.removeEventListener('click', uploadCancel);
+
+  commentInput.removeEventListener('input', fastValidateCommentInput);
+  hashtagsInput.removeEventListener('input', fastValidateHashtagsInput);
+  commentInput.removeEventListener('keydown', keyDownFocusedInput);
+  hashtagsInput.removeEventListener('keydown', keyDownFocusedInput);
+};
+
+const keyDownHandler = (evt) => {
+  if(isEscEvent(evt)) {
+    uploadCancel();
+    document.removeEventListener('keydown', keyDownHandler);
+  }
+};
+
+const showFormSuccessMessage = () => {
+  const formSuccessMessageTemplateFragment = document.querySelector('#success').content;
+  const formSuccessMessageTemplate = formSuccessMessageTemplateFragment.querySelector('section.success');
   const fragment = document.createDocumentFragment();
-  const element = formSuccessMessTemplate.cloneNode(true);
+  const element = formSuccessMessageTemplate.cloneNode(true);
   fragment.appendChild(element);
-  document.querySelector('body').appendChild(fragment);
+  body.appendChild(fragment);
+  const successSection = document.querySelector('section.success');
 
   const formSuccessKeyDownHandler = (evt) => {
     if(isEscEvent(evt)) {
-      document.querySelector('section.success').remove();
+      successSection.remove();
       document.removeEventListener('keydown', formSuccessKeyDownHandler);
     }
   };
-  const closeFormSuccessMess = () => {
-    document.querySelector('section.success').remove();
+  const closeFormSuccessMessage = () => {
+    successSection.remove();
     document.removeEventListener('keydown', formSuccessKeyDownHandler);
   };
-  const formSuccessOverlayClick = (evt) => {
+
+  const formSuccessButtonClickHandler = () => {
+    closeFormSuccessMessage();
+  };
+  const formSuccessOverlayClickHandler = (evt) => {
     if(evt.target.classList.contains('success')) {
-      closeFormSuccessMess();
+      closeFormSuccessMessage();
     }
   };
 
   document.addEventListener('keydown', formSuccessKeyDownHandler);
-  document.querySelector('.success__button').addEventListener('click', closeFormSuccessMess);
-  document.querySelector('section.success').addEventListener('click', formSuccessOverlayClick);
+  document.querySelector('.success__button').addEventListener('click', formSuccessButtonClickHandler);
+  successSection.addEventListener('click', formSuccessOverlayClickHandler);
 };
 
-const showFormErrorMess = () => {
-  const formErrorMessTemplateFragment = document.querySelector('#error').content;
-  const formErrorMessTemplate = formErrorMessTemplateFragment.querySelector('section.error');
+const showFormErrorMessage = () => {
+  const formErrorMessageTemplateFragment = document.querySelector('#error').content;
+  const formErrorMessageTemplate = formErrorMessageTemplateFragment.querySelector('section.error');
   const fragment = document.createDocumentFragment();
-  const element = formErrorMessTemplate.cloneNode(true);
+  const element = formErrorMessageTemplate.cloneNode(true);
   fragment.appendChild(element);
-  document.querySelector('body').appendChild(fragment);
+  body.appendChild(fragment);
+  const errorSection = document.querySelector('section.error');
 
   const formErrorKeyDownHandler = (evt) => {
     if(isEscEvent(evt)) {
-      document.querySelector('section.error').remove();
+      errorSection.remove();
       document.removeEventListener('keydown', formErrorKeyDownHandler);
     }
   };
-  const closeFormErrorMess = () => {
-    document.querySelector('section.error').remove();
+  const closeFormErrorMessage = () => {
+    errorSection.remove();
     document.removeEventListener('keydown', formErrorKeyDownHandler);
   };
   const formErrorOverlayClick = (evt) => {
     if(evt.target.classList.contains('error')) {
-      closeFormErrorMess();
+      closeFormErrorMessage();
     }
   };
 
   document.addEventListener('keydown', formErrorKeyDownHandler);
-  document.querySelector('.error__button').addEventListener('click', closeFormErrorMess);
-  document.querySelector('section.error').addEventListener('click', formErrorOverlayClick);
+  document.querySelector('.error__button').addEventListener('click', closeFormErrorMessage);
+  errorSection.addEventListener('click', formErrorOverlayClick);
 };
 
 const uploadSubmit = (evt) => {
@@ -167,25 +187,46 @@ const uploadSubmit = (evt) => {
   ).then(
     (response) => {
       if (response.ok) {
-        showFormSuccessMess();
-        return uploadCancel();
+        showFormSuccessMessage();
+        uploadCancel();
+        uploadSelectImage.removeEventListener('submit', uploadSubmit);
+        return;
       }
       throw new Error('Произошла ошибка');
     },
   ).catch(
     () => {
-      showFormErrorMess();
-      return uploadCancel();
+      showFormErrorMessage();
+      uploadCancel();
+      uploadSelectImage.removeEventListener('submit', uploadSubmit);
     },
   );
 };
 
-document.querySelector('#upload-file').addEventListener('change', uploadFileInputChange);
-document.querySelector('#upload-cancel').addEventListener('click', uploadCancel);
-document.querySelector('#upload-select-image').addEventListener('submit', uploadSubmit);
-document.addEventListener('keydown', keyDownHandler);
+const uploadFileInputChange = () => {
+  setNewScaleNumber(DEFAULT_SCALE);
+  pictureScaleChange();
+  changeFilter();
 
-commentInput.addEventListener('input', fastValidateCommentInput);
-hashtagsInput.addEventListener('input', fastValidateHashtagsInput);
-commentInput.addEventListener('keydown', keyDownFocusedInput);
-hashtagsInput.addEventListener('keydown', keyDownFocusedInput);
+  scaleSmallerButton.addEventListener('click', scaleControlSmallerClickHandler);
+  scaleBiggerButton.addEventListener('click', scaleControlBiggerClickHandler);
+
+  effectsRadioCollection.forEach( (item) => {
+    item.addEventListener('change', changeFilter);
+  });
+
+  cancelUploadButton.addEventListener('click', uploadCancel);
+  uploadSelectImage.addEventListener('submit', uploadSubmit);
+
+  commentInput.addEventListener('input', fastValidateCommentInput);
+  hashtagsInput.addEventListener('input', fastValidateHashtagsInput);
+  commentInput.addEventListener('keydown', keyDownFocusedInput);
+  hashtagsInput.addEventListener('keydown', keyDownFocusedInput);
+
+  document.addEventListener('keydown', keyDownHandler);
+
+  imgUploadOverlay.classList.remove('hidden');
+  body.classList.add('modal-open');
+};
+
+document.querySelector('#upload-file').addEventListener('change', uploadFileInputChange);

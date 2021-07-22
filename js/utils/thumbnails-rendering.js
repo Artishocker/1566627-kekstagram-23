@@ -1,5 +1,7 @@
 import {renderBigPicture} from './show-big-picture.js';
 
+const picturesBlock = document.querySelector('.pictures');
+
 const removeRenderedThumbnails = () => {
   const renderedThumbnails = document.querySelectorAll('.pictures .picture');
   renderedThumbnails.forEach( (picture) => {
@@ -8,7 +10,6 @@ const removeRenderedThumbnails = () => {
 };
 
 export const renderThumbnails = (Pictures) => {
-  const picturesBlock = document.querySelector('.pictures');
   const thumbsTemplateFragment = document.querySelector('#picture').content;
   const thumbsTemplate = thumbsTemplateFragment.querySelector('a');
   const fragment = document.createDocumentFragment();
@@ -28,7 +29,7 @@ export const renderThumbnails = (Pictures) => {
 
 export const firstInitializeThumbnails = (Pictures) => {
   const picturesBlockClickHandler = (evt) => renderBigPicture(evt, Pictures);
-  document.querySelector('.pictures').addEventListener('click', picturesBlockClickHandler);
+  picturesBlock.addEventListener('click', picturesBlockClickHandler);
   renderThumbnails(Pictures);
 };
 

@@ -7,7 +7,7 @@ const RANDOM_PHOTOS_QUANTITY = 10;
 
 const getMostCommentedPhotos = (photos) => {
   const sortedPhotos = photos.slice();
-  sortedPhotos.sort( (first, second) => (second.comments.length - first.comments.length)  );
+  sortedPhotos.sort( (first, second) => (second.comments.length - first.comments.length) );
   return sortedPhotos;
 };
 

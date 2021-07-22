@@ -89,8 +89,4 @@ export const changeFilter = () => {
   });
 };
 
-document.querySelectorAll('.effects__radio').forEach( (item) => {
-  item.addEventListener('change', changeFilter);
-});
-
 export * from './picture-effects.js';

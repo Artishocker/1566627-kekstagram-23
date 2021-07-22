@@ -1,39 +1,42 @@
 import {firstInitializeThumbnails} from './thumbnails-rendering.js';
 import {isEscEvent} from './util.js';
-import {activateFilters} from './filters.js';
+import {activateFilters} from './user-filter.js';
 
-const showFormErrorMess = (error) => {
-  const formErrorMessTemplateFragment = document.querySelector('#error').content;
-  const formErrorMessTemplate = formErrorMessTemplateFragment.querySelector('section.error');
+const showFormErrorMessage = (error) => {
+  const formErrorMessageTemplateFragment = document.querySelector('#error').content;
+  const formErrorMessageTemplate = formErrorMessageTemplateFragment.querySelector('section.error');
   const fragment = document.createDocumentFragment();
-  const element = formErrorMessTemplate.cloneNode(true);
+  const element = formErrorMessageTemplate.cloneNode(true);
   const elementTitle = element.querySelector('.error__title');
   elementTitle.textContent = error;
   elementTitle.style['line-height'] = '1.05em';
   element.querySelector('.error__button').textContent = 'Oк';
   fragment.appendChild(element);
   document.querySelector('body').appendChild(fragment);
+  const errorSection = document.querySelector('section.error');
 
   const formErrorKeyDownHandler = (evt) => {
     if(isEscEvent(evt)) {
-      document.querySelector('section.error').remove();
+      errorSection.remove();
       document.removeEventListener('keydown', formErrorKeyDownHandler);
     }
   };
-  const closeFormErrorMess = () => {
-    document.querySelector('section.error').remove();
+  const closeFormErrorMessage = () => {
+    errorSection.remove();
     document.removeEventListener('keydown', formErrorKeyDownHandler);
   };
-
-  const formErrorOverlayClick = (evt) => {
+  const errorOkButtonClickHandler = () => {
+    closeFormErrorMessage();
+  };
+  const formErrorOverlayClickHandler = (evt) => {
     if(evt.target.classList.contains('error')) {
-      closeFormErrorMess();
+      closeFormErrorMessage();
     }
   };
 
   document.addEventListener('keydown', formErrorKeyDownHandler);
-  document.querySelector('.error__button').addEventListener('click', closeFormErrorMess);
-  document.querySelector('section.error').addEventListener('click', formErrorOverlayClick);
+  document.querySelector('.error__button').addEventListener('click', errorOkButtonClickHandler);
+  errorSection.addEventListener('click', formErrorOverlayClickHandler);
 };
 
 fetch('https://23.javascript.pages.academy/kekstagram/data')
@@ -50,5 +53,5 @@ fetch('https://23.javascript.pages.academy/kekstagram/data')
     activateFilters(photos);
   })
   .catch((error) => {
-    showFormErrorMess(error);
+    showFormErrorMessage(error);
   });
