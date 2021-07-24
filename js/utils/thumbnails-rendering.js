@@ -23,7 +23,6 @@ export const renderThumbnails = (pictures) => {
   }
 
   removeRenderedThumbnails();
-
   picturesBlock.appendChild(fragment);
 };
 

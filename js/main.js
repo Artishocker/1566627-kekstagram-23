@@ -1,28 +1,20 @@
-/* global _:readonly */
 import './utils/upload-file.js';
-//import './utils/remote-server-get-data.js';
 import {debounce} from './utils/debounce.js';
 import {setFiltersClick} from './utils/user-filter.js';
-import {renderThumbnails} from './utils/thumbnails-rendering.js';
+import {renderThumbnails, firstInitializeThumbnails} from './utils/thumbnails-rendering.js';
 import {getData} from './utils/api.js';
+import {showGetDataErrorMessage} from './utils/alert-popups.js';
 
 const RERENDER_DELAY = 500;
 
-
 getData((photos) => {
-
-  renderThumbnails(photos);
+  firstInitializeThumbnails(photos);
   setFiltersClick(debounce(
-    (newPhotos) => renderThumbnails(newPhotos),
+    (photosSetByFilter) => renderThumbnails(photosSetByFilter),
     RERENDER_DELAY,
   ), photos);
-/*
-  setFiltersClick(
-    (newPhotos) => renderThumbnails(newPhotos),
-    photos);
-*/
-  /*setCoatClick(_.debounce(
-    () => renderThumbnails(wizards),
-    RERENDER_DELAY,
-  ));*/
-});
+},
+(error) => {
+  showGetDataErrorMessage(error);
+},
+);

@@ -1,6 +1,8 @@
 import {isEscEvent} from './util.js';
 import {scaleSmallerButton, scaleBiggerButton, setNewScaleNumber, pictureScaleChange, scaleControlBiggerClickHandler, scaleControlSmallerClickHandler} from './picture-scale.js';
 import {changeFilter} from './picture-effects.js';
+import {showFormErrorMessage, showFormSuccessMessage} from './alert-popups.js';
+import {sendData} from './api.js';
 
 const DEFAULT_SCALE = 100;
 const COMMENT_MAX_LENGTH = 140;
@@ -65,13 +67,8 @@ const fastValidateHashtagsInput = () => {
   }
   //Проверяем каждый хэштег на соответствие регулярному выражению
   for (let index = 0; index < hashtags.length; index++) {
-    if(hashtags[index].length > 20) {
+    if(hashtags[index].length > 20 || !re.test(hashtags[index])) {
       hashtagsInput.setCustomValidity(`Хэштэг №${index+1}: "${hashtags[index]}" \r\n не соответствует требованиям. ${ErrorMessages.HASHTAGS_LENGTH}`);
-      hashtagsInput.reportValidity();
-      return false;
-    }
-    if(!re.test(hashtags[index])) {
-      hashtagsInput.setCustomValidity(`Хэштэг №${index+1}: "${hashtags[index]}" \r\n не соответствует требованиям. ${ErrorMessages.HASHTAGS_TEMPLATE}`);
       hashtagsInput.reportValidity();
       return false;
     }
@@ -110,74 +107,23 @@ const keyDownHandler = (evt) => {
   }
 };
 
-const showFormSuccessMessage = () => {
-  const formSuccessMessageTemplateFragment = document.querySelector('#success').content;
-  const formSuccessMessageTemplate = formSuccessMessageTemplateFragment.querySelector('section.success');
-  const fragment = document.createDocumentFragment();
-  const element = formSuccessMessageTemplate.cloneNode(true);
-  fragment.appendChild(element);
-  body.appendChild(fragment);
-  const successSection = document.querySelector('section.success');
-
-  const formSuccessKeyDownHandler = (evt) => {
-    if(isEscEvent(evt)) {
-      successSection.remove();
-      document.removeEventListener('keydown', formSuccessKeyDownHandler);
-    }
-  };
-  const closeFormSuccessMessage = () => {
-    successSection.remove();
-    document.removeEventListener('keydown', formSuccessKeyDownHandler);
-  };
-
-  const formSuccessButtonClickHandler = () => {
-    closeFormSuccessMessage();
-  };
-  const formSuccessOverlayClickHandler = (evt) => {
-    if(evt.target.classList.contains('success')) {
-      closeFormSuccessMessage();
-    }
-  };
-
-  document.addEventListener('keydown', formSuccessKeyDownHandler);
-  document.querySelector('.success__button').addEventListener('click', formSuccessButtonClickHandler);
-  successSection.addEventListener('click', formSuccessOverlayClickHandler);
-};
-
-const showFormErrorMessage = () => {
-  const formErrorMessageTemplateFragment = document.querySelector('#error').content;
-  const formErrorMessageTemplate = formErrorMessageTemplateFragment.querySelector('section.error');
-  const fragment = document.createDocumentFragment();
-  const element = formErrorMessageTemplate.cloneNode(true);
-  fragment.appendChild(element);
-  body.appendChild(fragment);
-  const errorSection = document.querySelector('section.error');
-
-  const formErrorKeyDownHandler = (evt) => {
-    if(isEscEvent(evt)) {
-      errorSection.remove();
-      document.removeEventListener('keydown', formErrorKeyDownHandler);
-    }
-  };
-  const closeFormErrorMessage = () => {
-    errorSection.remove();
-    document.removeEventListener('keydown', formErrorKeyDownHandler);
-  };
-  const formErrorOverlayClick = (evt) => {
-    if(evt.target.classList.contains('error')) {
-      closeFormErrorMessage();
-    }
-  };
-
-  document.addEventListener('keydown', formErrorKeyDownHandler);
-  document.querySelector('.error__button').addEventListener('click', closeFormErrorMessage);
-  errorSection.addEventListener('click', formErrorOverlayClick);
-};
-
 const uploadSubmit = (evt) => {
   evt.preventDefault();
   const formData = new FormData(evt.target);
-
+  sendData(
+    () => {
+      showFormSuccessMessage();
+      uploadCancel();
+      uploadSelectImage.removeEventListener('submit', uploadSubmit);
+    },
+    () => {
+      showFormErrorMessage();
+      uploadCancel();
+      uploadSelectImage.removeEventListener('submit', uploadSubmit);
+    },
+    formData,
+  );
+/*
   fetch(
     'https://23.javascript.pages.academy/kekstagram',
     {
@@ -201,6 +147,7 @@ const uploadSubmit = (evt) => {
       uploadSelectImage.removeEventListener('submit', uploadSubmit);
     },
   );
+  */
 };
 
 const uploadFileInputChange = () => {
