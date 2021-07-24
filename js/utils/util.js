@@ -14,7 +14,7 @@ const getRandomNumber = function (minValue, MaxValue) {
   return Math.floor(Math.random() * (max - min + 1)) + min; //Максимум и минимум включаются
 };
 
-const getRandomSet = (minValue, maxValue, amount) => {
+const getRandomNumbersSet = (minValue, maxValue, amount) => {
   const newSet = new Set();
   while (newSet.size < amount) {
     newSet.add(getRandomNumber(minValue, maxValue));
@@ -22,15 +22,15 @@ const getRandomSet = (minValue, maxValue, amount) => {
   return newSet;
 };
 
-const getRandomSetFromArr = (inputArr, outputArrLength) => {
-  const outputArr = [];
-  const randomSet = getRandomSet(0, inputArr.length - 1, outputArrLength);
-  randomSet.forEach( (item) => {
-    outputArr.push(inputArr[item]);
+const getRandomSetFromArray = (inputArray, outputArrayLength) => {
+  const randomItemsSet = [];
+  const randomNumbersSet = getRandomNumbersSet(0, inputArray.length - 1, outputArrayLength);
+  randomNumbersSet.forEach( (item) => {
+    randomItemsSet.push(inputArray[item]);
   });
-  return outputArr;
+  return randomItemsSet;
 };
 
 const isEscEvent = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
 
-export {getRandomNumber, isEscEvent, getRandomSetFromArr};
+export {getRandomNumber, isEscEvent, getRandomSetFromArray};

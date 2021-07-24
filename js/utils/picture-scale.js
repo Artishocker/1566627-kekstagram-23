@@ -17,13 +17,13 @@ export const setNewScaleNumber = (newScaleNumber) => {
 export const pictureScaleChange = () => {
   const newScaleNumber = getCurrentScaleNum();
   document.querySelectorAll('.img-upload__scale button').forEach( (item) => {
-    item.removeAttribute('disabled');
+    item.disabled = false;
   });
   if(newScaleNumber >= ScaleOptions.MAX_VALUE) {
-    scaleBiggerButton.setAttribute('disabled', true);
+    scaleBiggerButton.disabled = true;
   }
   if(newScaleNumber <= ScaleOptions.MIN_VALUE) {
-    scaleSmallerButton.setAttribute('disabled', true);
+    scaleSmallerButton.disabled = true;
   }
   imgUploadPreview.style.transform = `scale(${newScaleNumber / 100})`;
 };

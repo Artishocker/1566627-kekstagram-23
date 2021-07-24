@@ -9,16 +9,16 @@ const removeRenderedThumbnails = () => {
   });
 };
 
-export const renderThumbnails = (Pictures) => {
+export const renderThumbnails = (pictures) => {
   const thumbsTemplateFragment = document.querySelector('#picture').content;
   const thumbsTemplate = thumbsTemplateFragment.querySelector('a');
   const fragment = document.createDocumentFragment();
-  for (let pic = 0; pic < Pictures.length; pic++) {
+  for (let pic = 0; pic < pictures.length; pic++) {
     const element = thumbsTemplate.cloneNode(true);
-    element.dataset.picId = Pictures[pic].id;
-    element.children[0].src = Pictures[pic].url;
-    element.children[1].children[0].textContent = Pictures[pic].comments.length;
-    element.children[1].children[1].textContent = Pictures[pic].likes;
+    element.dataset.picId = pictures[pic].id;
+    element.children[0].src = pictures[pic].url;
+    element.children[1].children[0].textContent = pictures[pic].comments.length;
+    element.children[1].children[1].textContent = pictures[pic].likes;
     fragment.appendChild(element);
   }
 
@@ -27,10 +27,10 @@ export const renderThumbnails = (Pictures) => {
   picturesBlock.appendChild(fragment);
 };
 
-export const firstInitializeThumbnails = (Pictures) => {
-  const picturesBlockClickHandler = (evt) => renderBigPicture(evt, Pictures);
+export const firstInitializeThumbnails = (pictures) => {
+  const picturesBlockClickHandler = (evt) => renderBigPicture(evt, pictures);
   picturesBlock.addEventListener('click', picturesBlockClickHandler);
-  renderThumbnails(Pictures);
+  renderThumbnails(pictures);
 };
 
 export * from './thumbnails-rendering.js';
