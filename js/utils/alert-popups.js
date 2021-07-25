@@ -1,72 +1,43 @@
 import {isEscEvent} from './util.js';
 
-const body = document.querySelector('body');
-
-export const showGetDataErrorMessage = (error) => {
-  const formErrorMessageTemplateFragment = document.querySelector('#error').content;
-  const formErrorMessageTemplate = formErrorMessageTemplateFragment.querySelector('section.error');
+const showCustomPopup = (popupName, error) => {
+  const messageTemplateFragment = document.querySelector(`#${popupName}`).content;
+  const messageTemplate = messageTemplateFragment.querySelector(`section.${popupName}`);
   const fragment = document.createDocumentFragment();
-  const element = formErrorMessageTemplate.cloneNode(true);
-  const elementTitle = element.querySelector('.error__title');
-  elementTitle.textContent = error;
-  elementTitle.style['line-height'] = '1.05em';
-  element.querySelector('.error__button').textContent = 'Oк';
-  fragment.appendChild(element);
-  body.appendChild(fragment);
-  const errorSection = document.querySelector('section.error');
+  const element = messageTemplate.cloneNode(true);
 
-  const getDataErrorMessageInteractions = (evt) => {
-    if(evt.target.classList.contains('error') ||
-      evt.target.classList.contains('error__button') ||
+  if(error) {
+    const elementTitle = element.querySelector(`.${popupName}__title`);
+    elementTitle.textContent = error;
+    elementTitle.style['line-height'] = '1.05em';
+    element.querySelector(`.${popupName}__button`).textContent = 'Oк';
+  }
+
+  fragment.appendChild(element);
+  document.querySelector('body').appendChild(fragment);
+  const popupSection = document.querySelector(`section.${popupName}`);
+
+  const messageInteractions = (evt) => {
+    if(evt.target.classList.contains(`${popupName}`) ||
+      evt.target.classList.contains(`${popupName}__button`) ||
       isEscEvent(evt)) {
-      errorSection.remove();
-      document.removeEventListener('keydown', getDataErrorMessageInteractions);
+      popupSection.remove();
+      document.removeEventListener('keydown', messageInteractions);
     }
   };
 
-  document.addEventListener('keydown', getDataErrorMessageInteractions);
-  errorSection.addEventListener('click', getDataErrorMessageInteractions);
-};
-
-export const showFormSuccessMessage = () => {
-  const formSuccessMessageTemplateFragment = document.querySelector('#success').content;
-  const formSuccessMessageTemplate = formSuccessMessageTemplateFragment.querySelector('section.success');
-  const fragment = document.createDocumentFragment();
-  const element = formSuccessMessageTemplate.cloneNode(true);
-  fragment.appendChild(element);
-  body.appendChild(fragment);
-  const successSection = document.querySelector('section.success');
-
-  const formSuccessMessageInteractions = (evt) => {
-    if(evt.target.classList.contains('success') ||
-      evt.target.classList.contains('success__button') ||
-      isEscEvent(evt)) {
-      successSection.remove();
-      document.removeEventListener('keydown', formSuccessMessageInteractions);
-    }
-  };
-  document.addEventListener('keydown', formSuccessMessageInteractions);
-  successSection.addEventListener('click', formSuccessMessageInteractions);
+  document.addEventListener('keydown', messageInteractions);
+  popupSection.addEventListener('click', messageInteractions);
 };
 
 export const showFormErrorMessage = () => {
-  const formErrorMessageTemplateFragment = document.querySelector('#error').content;
-  const formErrorMessageTemplate = formErrorMessageTemplateFragment.querySelector('section.error');
-  const fragment = document.createDocumentFragment();
-  const element = formErrorMessageTemplate.cloneNode(true);
-  fragment.appendChild(element);
-  body.appendChild(fragment);
-  const errorSection = document.querySelector('section.error');
+  showCustomPopup('error');
+};
 
-  const formErrorMessageInteractions = (evt) => {
-    if(evt.target.classList.contains('error') ||
-      evt.target.classList.contains('error__button') ||
-      isEscEvent(evt)) {
-      errorSection.remove();
-      document.removeEventListener('keydown', formErrorMessageInteractions);
-    }
-  };
+export const showFormSuccessMessage = () => {
+  showCustomPopup('success');
+};
 
-  document.addEventListener('keydown', formErrorMessageInteractions);
-  errorSection.addEventListener('click', formErrorMessageInteractions);
+export const showGetDataErrorMessage = (error) => {
+  showCustomPopup('error', error);
 };
