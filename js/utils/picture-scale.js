@@ -37,5 +37,3 @@ export const scaleControlSmallerClickHandler = () => {
   setNewScaleNumber(getCurrentScaleNum() - ScaleOptions.VALUE_STEP);
   pictureScaleChange();
 };
-
-export * from './picture-scale.js';

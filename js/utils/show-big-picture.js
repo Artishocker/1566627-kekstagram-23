@@ -80,5 +80,3 @@ export const renderBigPicture = (evt, pictures) => {
     document.addEventListener('keydown', keyDownHandler);
   }
 };
-
-export * from './show-big-picture.js';

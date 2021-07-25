@@ -110,6 +110,7 @@ const keyDownHandler = (evt) => {
 const uploadSubmit = (evt) => {
   evt.preventDefault();
   const formData = new FormData(evt.target);
+
   sendData(
     () => {
       showFormSuccessMessage();
@@ -123,31 +124,7 @@ const uploadSubmit = (evt) => {
     },
     formData,
   );
-/*
-  fetch(
-    'https://23.javascript.pages.academy/kekstagram',
-    {
-      'method': 'POST',
-      'body': formData,
-    },
-  ).then(
-    (response) => {
-      if (response.ok) {
-        showFormSuccessMessage();
-        uploadCancel();
-        uploadSelectImage.removeEventListener('submit', uploadSubmit);
-        return;
-      }
-      throw new Error('Произошла ошибка');
-    },
-  ).catch(
-    () => {
-      showFormErrorMessage();
-      uploadCancel();
-      uploadSelectImage.removeEventListener('submit', uploadSubmit);
-    },
-  );
-  */
+
 };
 
 const uploadFileInputChange = () => {

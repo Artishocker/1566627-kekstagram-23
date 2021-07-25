@@ -12,31 +12,20 @@ export const showGetDataErrorMessage = (error) => {
   elementTitle.style['line-height'] = '1.05em';
   element.querySelector('.error__button').textContent = 'Oк';
   fragment.appendChild(element);
-  document.querySelector('body').appendChild(fragment);
+  body.appendChild(fragment);
   const errorSection = document.querySelector('section.error');
 
-  const formErrorKeyDownHandler = (evt) => {
-    if(isEscEvent(evt)) {
+  const getDataErrorMessageInteractions = (evt) => {
+    if(evt.target.classList.contains('error') ||
+      evt.target.classList.contains('error__button') ||
+      isEscEvent(evt)) {
       errorSection.remove();
-      document.removeEventListener('keydown', formErrorKeyDownHandler);
-    }
-  };
-  const closeFormErrorMessage = () => {
-    errorSection.remove();
-    document.removeEventListener('keydown', formErrorKeyDownHandler);
-  };
-  const errorOkButtonClickHandler = () => {
-    closeFormErrorMessage();
-  };
-  const formErrorOverlayClickHandler = (evt) => {
-    if(evt.target.classList.contains('error')) {
-      closeFormErrorMessage();
+      document.removeEventListener('keydown', getDataErrorMessageInteractions);
     }
   };
 
-  document.addEventListener('keydown', formErrorKeyDownHandler);
-  document.querySelector('.error__button').addEventListener('click', errorOkButtonClickHandler);
-  errorSection.addEventListener('click', formErrorOverlayClickHandler);
+  document.addEventListener('keydown', getDataErrorMessageInteractions);
+  errorSection.addEventListener('click', getDataErrorMessageInteractions);
 };
 
 export const showFormSuccessMessage = () => {
@@ -48,29 +37,16 @@ export const showFormSuccessMessage = () => {
   body.appendChild(fragment);
   const successSection = document.querySelector('section.success');
 
-  const formSuccessKeyDownHandler = (evt) => {
-    if(isEscEvent(evt)) {
+  const formSuccessMessageInteractions = (evt) => {
+    if(evt.target.classList.contains('success') ||
+      evt.target.classList.contains('success__button') ||
+      isEscEvent(evt)) {
       successSection.remove();
-      document.removeEventListener('keydown', formSuccessKeyDownHandler);
+      document.removeEventListener('keydown', formSuccessMessageInteractions);
     }
   };
-  const closeFormSuccessMessage = () => {
-    successSection.remove();
-    document.removeEventListener('keydown', formSuccessKeyDownHandler);
-  };
-
-  const formSuccessButtonClickHandler = () => {
-    closeFormSuccessMessage();
-  };
-  const formSuccessOverlayClickHandler = (evt) => {
-    if(evt.target.classList.contains('success')) {
-      closeFormSuccessMessage();
-    }
-  };
-
-  document.addEventListener('keydown', formSuccessKeyDownHandler);
-  document.querySelector('.success__button').addEventListener('click', formSuccessButtonClickHandler);
-  successSection.addEventListener('click', formSuccessOverlayClickHandler);
+  document.addEventListener('keydown', formSuccessMessageInteractions);
+  successSection.addEventListener('click', formSuccessMessageInteractions);
 };
 
 export const showFormErrorMessage = () => {
@@ -82,42 +58,15 @@ export const showFormErrorMessage = () => {
   body.appendChild(fragment);
   const errorSection = document.querySelector('section.error');
 
-  const formErrorKeyDownHandler = (evt) => {
-    if(isEscEvent(evt)) {
+  const formErrorMessageInteractions = (evt) => {
+    if(evt.target.classList.contains('error') ||
+      evt.target.classList.contains('error__button') ||
+      isEscEvent(evt)) {
       errorSection.remove();
-      document.removeEventListener('keydown', formErrorKeyDownHandler);
-    }
-  };
-  const closeFormErrorMessage = () => {
-    errorSection.remove();
-    document.removeEventListener('keydown', formErrorKeyDownHandler);
-  };
-  const formErrorOverlayClick = (evt) => {
-    if(evt.target.classList.contains('error')) {
-      closeFormErrorMessage();
+      document.removeEventListener('keydown', formErrorMessageInteractions);
     }
   };
 
-  document.addEventListener('keydown', formErrorKeyDownHandler);
-  document.querySelector('.error__button').addEventListener('click', closeFormErrorMessage);
-  errorSection.addEventListener('click', formErrorOverlayClick);
+  document.addEventListener('keydown', formErrorMessageInteractions);
+  errorSection.addEventListener('click', formErrorMessageInteractions);
 };
-
-/*
-fetch('https://23.javascript.pages.academy/kekstagram/data')
-  .then(
-    (response) => {
-      if (response.ok) {
-        return response.json();
-      }
-      const {statusText, status} = response;
-      throw new Error(`Произошла ошибка загрузки данных с сервера:\r\n \r\n${status} - ${statusText}`);
-    })
-  .then((photos) => {
-    firstInitializeThumbnails(photos);
-    activateFilters(photos);
-  })
-  .catch((error) => {
-    showFormErrorMessage(error);
-  });
-*/

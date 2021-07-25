@@ -31,5 +31,3 @@ export const firstInitializeThumbnails = (pictures) => {
   picturesBlock.addEventListener('click', picturesBlockClickHandler);
   renderThumbnails(pictures);
 };
-
-export * from './thumbnails-rendering.js';

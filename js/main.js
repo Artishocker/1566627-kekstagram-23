@@ -1,4 +1,5 @@
 import './utils/upload-file.js';
+import './utils/avatar.js';
 import {debounce} from './utils/debounce.js';
 import {setFiltersClick} from './utils/user-filter.js';
 import {renderThumbnails, firstInitializeThumbnails} from './utils/thumbnails-rendering.js';

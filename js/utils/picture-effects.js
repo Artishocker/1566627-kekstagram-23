@@ -88,5 +88,3 @@ export const changeFilter = () => {
     step: sliderStep,
   });
 };
-
-export * from './picture-effects.js';
