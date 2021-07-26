@@ -1,6 +1,6 @@
 import {isEscEvent} from './util.js';
 
-const showCustomPopup = (popupName, error) => {
+const showMessagePopup = (popupName, error) => {
   const messageTemplateFragment = document.querySelector(`#${popupName}`).content;
   const messageTemplate = messageTemplateFragment.querySelector(`section.${popupName}`);
   const fragment = document.createDocumentFragment();
@@ -31,13 +31,13 @@ const showCustomPopup = (popupName, error) => {
 };
 
 export const showFormErrorMessage = () => {
-  showCustomPopup('error');
+  showMessagePopup('error');
 };
 
 export const showFormSuccessMessage = () => {
-  showCustomPopup('success');
+  showMessagePopup('success');
 };
 
 export const showGetDataErrorMessage = (error) => {
-  showCustomPopup('error', error);
+  showMessagePopup('error', error);
 };
